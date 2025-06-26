@@ -12,8 +12,10 @@ jobs:
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # allows push back to the repo
 
-      - name: 🟢 Use Node.js
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -22,11 +24,23 @@ jobs:
       - name: 📦 Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: 📝 Extract version from tag and update package.json
+      - name: 📝 Update package.json version from Git tag
+        id: versioning
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
-          echo "Updating package.json to version $TAG_VERSION"
+          echo "Detected tag version: $TAG_VERSION"
           jq ".version = \"$TAG_VERSION\"" package.json > tmp.json && mv tmp.json package.json
+          echo "new_version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: 💾 Commit updated package.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: bump version to v${{ steps.versioning.outputs.new_version }}"
+          git push origin HEAD:main  # or replace with your default branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔨 Build project
         run: yarn build
