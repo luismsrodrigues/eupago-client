@@ -13,7 +13,6 @@
     "release": "npm publish",
     "test": "jest",
     "test:watch": "jest --watchAll"
-
   },
   "keywords": [],
   "author": "",
