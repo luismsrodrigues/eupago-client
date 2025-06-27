@@ -147,4 +147,4 @@ Thrown on network or API-level errors when calling `payByLink`. Contains `code` 
 
 ## Reference
 
-Everything in this SDK maps directly to the EuPago PayByLink [API Reference](https://eupago.readme.io/reference/api-eupago). See their docs for full details on request parameters and response fields.
+Everything in this SDK maps directly to the EuPago API [API Reference](https://eupago.readme.io/reference/api-eupago). See their docs for full details on request parameters and response fields.
