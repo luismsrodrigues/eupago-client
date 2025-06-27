@@ -3,7 +3,7 @@
 A TypeScript client library for integrating with the [EuPago API](https://eupago.readme.io/reference/api-eupago). This client handles request serialization, schema validation via Zod, structured error handling using custom exceptions, and includes unit test suites.
 
 [![npm downloads](https://img.shields.io/npm/dm/@luisrodrigues/eupago-client.svg)](https://www.npmjs.com/package/@luisrodrigues/eupago-client)
-[![CI](https://github.com/@luisrodrigues/eupago-client/actions/workflows/publish.yml/badge.svg)](https://github.com/@luisrodrigues/eupago-client/actions/workflows/publish.yml)
+[![CI](https://github.com/luismsrodrigues/eupago-client/actions/workflows/publish.yml/badge.svg)](https://github.com/luismsrodrigues/eupago-client/actions/workflows/publish.yml)
 
 ---
 

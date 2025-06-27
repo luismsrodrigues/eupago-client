@@ -1,5 +1,5 @@
 # .github/workflows/publish.yml
-name: Publish to NPM
+name: Test and Publish to NPM
 
 on:
   push:
