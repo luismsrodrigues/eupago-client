@@ -1,4 +1,4 @@
-import {EuPagoClient, PayBeLinkResponseDto} from '../src';
+import {EuPagoClient} from '../src';
 import {GenericException} from "../src/exceptions";
 
 describe('EuPagoClient', () => {
