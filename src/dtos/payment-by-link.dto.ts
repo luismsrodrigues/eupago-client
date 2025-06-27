@@ -1,5 +1,6 @@
 import {z} from "zod";
 import {format} from "date-fns";
+import { Currency } from "../constants";
 
 export const PayByLinkRequestSchema = z.object({
   payment: z.object({
@@ -7,7 +8,7 @@ export const PayByLinkRequestSchema = z.object({
     failUrl: z.string().url().optional(),
     backUrl: z.string().url().optional(),
     amount: z.object({
-      currency: z.string(),
+      currency: z.nativeEnum(Currency),
       value: z.number(),
     }),
     lang: z.string(),

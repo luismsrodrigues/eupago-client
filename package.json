@@ -19,6 +19,10 @@
     "./exceptions": {
       "require": "./dist/exceptions/index.cjs",
       "import": "./dist/exceptions/index.mjs"
+    },
+    "./constants": {
+      "require": "./dist/constants/index.cjs",
+      "import": "./dist/constants/index.mjs"
     }
   },
   "scripts": {

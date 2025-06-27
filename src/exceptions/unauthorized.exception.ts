@@ -1,8 +1,8 @@
 import { BaseException } from "./base.exceptions";
 
-export class GenericException extends BaseException {
+export class UnauthorizedException extends BaseException {
   constructor(message: string) {
     super(message);
-    this.name = GenericException.name;
+    this.name = UnauthorizedException.name;
   }
 }

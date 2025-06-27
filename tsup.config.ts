@@ -5,6 +5,7 @@ export default defineConfig({
     "src/index.ts",
     "src/dtos/index.ts",
     "src/exceptions/index.ts",
+    "src/constants/index.ts",
   ],
   format: ["esm", "cjs"],
   dts: true,
