@@ -16,9 +16,6 @@ export function parseZodSchemaOrThrow<S extends ZodTypeAny>(
       exp.withData(key, message);
     });
 
-    console.error(exp.toString());
-    
-
     throw exp;
   }
 
