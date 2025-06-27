@@ -1,7 +1,10 @@
 import axios, {AxiosError, AxiosInstance, AxiosResponse} from "axios";
 import {
   ClientOptionsDto,
-  ClientOptionsSchema, PayBeLinkErrorResponseSchema, PayBeLinkResponseDto, PayBeLinkResponseSchema,
+  ClientOptionsSchema, 
+  PayBeLinkErrorResponseSchema, 
+  PayBeLinkResponseDto, 
+  PayBeLinkResponseSchema,
   PayByLinkRequestDto,
   PayByLinkRequestSchema,
   serializePayByLinkRequest
@@ -22,6 +25,7 @@ export class EuPagoClient {
       timeout: this.options.timeout,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `ApiKey ${this.options.apiKey}`,
       },
     });
   }
@@ -30,20 +34,12 @@ export class EuPagoClient {
     const payloadParsed = parseZodSchemaOrThrow(payload, PayByLinkRequestSchema);
     const request = serializePayByLinkRequest(payloadParsed);
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `ApiKey ${this.options.apiKey}`,
-    };
-
     let response: AxiosResponse<PayBeLinkResponseDto>;
 
     try {
       response = await this.axios.post<PayBeLinkResponseDto>(
         "v1.02/paybylink/create",
           request,
-        {
-          headers
-        }
       );
     } catch (e) {
       if(e instanceof AxiosError) {

@@ -1,6 +1,9 @@
-# EuPago Client Client
+# EuPago API Client
 
-A TypeScript client library for integrating with the [EuPago PayByLink API](https://eupago.readme.io/reference/api-eupago). This Client handles request serialization, schema validation via Zod, and structured error handling using custom exceptions.
+A TypeScript client library for integrating with the [EuPago API](https://eupago.readme.io/reference/api-eupago). This client handles request serialization, schema validation via Zod, structured error handling using custom exceptions, and includes unit test suites.
+
+[![npm downloads](https://img.shields.io/npm/dm/@luisrodrigues/eupago-client.svg)](https://www.npmjs.com/package/@luisrodrigues/eupago-client)
+[![CI](https://github.com/@luisrodrigues/eupago-client/actions/workflows/publish.yml/badge.svg)](https://github.com/@luisrodrigues/eupago-client/actions/workflows/publish.yml)
 
 ---
 
@@ -8,7 +11,6 @@ A TypeScript client library for integrating with the [EuPago PayByLink API](http
 
 * **Zod-powered validation**: All inputs and responses are validated against Zod schemas. Invalid data throws a `ValidationException` with detailed error information.
 * **Typed DTOs (Data Transfer Objects)**: Request and response shapes are defined in `dtos/*.ts` and inferred via `z.infer` for end-to-end type safety.
-* **Automatic serialization**: `serializePayByLinkRequest` converts your DTO to the payload format expected by the API.
 * **Configurable HTTP client**: Uses Axios under the hood, with support for sandbox and production endpoints, timeouts, and API key authorization.
 * **Structured error handling**: Network or API errors are wrapped in a `GenericException` (or `ValidationException`), carrying metadata via the `ExceptionBase` class.
 
@@ -19,7 +21,7 @@ A TypeScript client library for integrating with the [EuPago PayByLink API](http
 ```bash
 npm install @luisrodrigues/eupago-client
 # or
-yarn add TypeScript icon, indicating that this package has built-in type declarations
+yarn add @luisrodrigues/eupago-client
 ```
 
 ---
@@ -27,48 +29,62 @@ yarn add TypeScript icon, indicating that this package has built-in type declara
 ## Quick Start
 
 ```ts
-import { EuPagoClient } from "@your-org/eupago-client";
-import { PayByLinkRequestDto } from "@your-org/eupago-client/dtos";
+import { EuPagoClient, PayByLinkRequestDto } from "@luisrodrigues/eupago-client";
+import { ValidationException, GenericException } from "@luisrodrigues/eupago-client/exceptions";
 
-// 1. Configure the client
-const client = new EuPagoClient({
-  apiKey: process.env.EUPAGO_API_KEY!,
-  timeout: 5000,
-  isSandbox: true,
-});
+(async () => {
+  // 1. Configure the client
+  const client = new EuPagoClient({
+    apiKey: process.env.EUPAGO_API_KEY!,
+    timeout: 5000,
+    isSandbox: true,
+  });
 
-// 2. Build your request DTO
-const request: PayByLinkRequestDto = {
-  amount: 25.0,
-  clientReference: "ORDER-1234",
-  description: "Payment for order #1234",
-  // ... other required fields
-};
+  // 2. Build your request DTO
+  const request: PayByLinkRequestDto = {
+    amount: 25.0,
+    clientReference: "ORDER-1234",
+    description: "Payment for order #1234",
+    // ... other required fields
+  };
 
-// 3. Call the API
-try {
-  const result = await client.payByLink(request);
-  console.log("Redirect URL:", result.redirectUrl);
-} catch (err) {
-  if (err instanceof ValidationException) {
-    console.error("Validation errors:", err.responseData);
-  } else if (err instanceof GenericException) {
-    console.error("API error:", err.responseData);
-  } else {
-    console.error("Unexpected error:", err);
+  // 3. Call the API
+  try {
+    const result = await client.payByLink(request);
+    console.log("Redirect URL:", result.redirectUrl);
+  } catch (err) {
+    if (err instanceof ValidationException) {
+      console.error("Validation errors:", err.responseData);
+    } else if (err instanceof GenericException) {
+      console.error("API error:", err.responseData);
+    } else {
+      console.error("Unexpected error:", err);
+    }
   }
-}
+})();
 ```
 
 ---
 
 ## Configuration Options
 
-| Option      | Type      | Required | Description                                                             |
-| ----------- | --------- | -------- | ----------------------------------------------------------------------- |
-| `apiKey`    | `string`  | Yes      | Your EuPago API key                                                     |
-| `timeout`   | `number`  | No       | Axios request timeout in milliseconds (default: 5000)                   |
-| `isSandbox` | `boolean` | No       | Whether to use the sandbox environment (`true`) or production (`false`) |
+| Option      | Type      | Required | Description                                                              |
+| ----------- | --------- | -------- | ------------------------------------------------------------------------ |
+| `apiKey`    | `string`  | Yes      | Your EuPago API key                                                      |
+| `timeout`   | `number`  | No       | Axios request timeout in milliseconds (default: 5000)                    |
+| `isSandbox` | `boolean` | No       | Whether to use the sandbox environment (`true`) or production (`false`). |
+
+When `isSandbox` is set to `true`, the client will use the **Sandbox Environment**:
+
+```
+https://sandbox.eupago.pt/api/
+```
+
+When `isSandbox` is set to `false`, the client will use the **Production Environment**:
+
+```
+https://clientes.eupago.pt/api/
+```
 
 ---
 
@@ -78,7 +94,7 @@ All request and response DTOs live under the `dtos/` folder. Each has a matching
 
 * **`PayByLinkRequestDto`** (`PayByLinkRequestSchema`)
 * **`PayBeLinkResponseDto`** (`PayBeLinkResponseSchema`)
-* **`PayBeLinkErrorResponseSchema`**
+* **`PayBeLinkErrorResponseDto`** (`PayBeLinkErrorResponseSchema`)
 * **`ClientOptionsDto`** (`ClientOptionsSchema`)
 
 ---
