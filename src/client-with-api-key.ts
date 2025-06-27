@@ -53,6 +53,7 @@ export class EuPagoWithApiKeyClient {
   private handleAxiosError(err: unknown, message: string): BaseException {
     if (err instanceof AxiosError && err.response) {
       const status = err.response.status;
+      
       if (status === 400 || status === 409) {
         const parsed = parseZodSchemaOrThrow(
           err.response.data,

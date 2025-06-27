@@ -1,11 +1,16 @@
 import { EuPagoWithApiKeyClient } from "../src";
-import { Currency } from "../src/constants";
-import { BusinessException, GenericException, UnauthorizedException, ValidationException } from "../src/exceptions";
+import { Currency, Language } from "../src/constants";
+import {
+  BusinessException,
+  GenericException,
+  UnauthorizedException,
+  ValidationException,
+} from "../src/exceptions";
 
 describe("EuPagoWithApiKeyClient", () => {
   it("invalid api key must throw a UnauthorizedException", async () => {
     const client = new EuPagoWithApiKeyClient({
-      apiKey: 'INVALID_API_KEY',
+      apiKey: "INVALID_API_KEY",
       isSandbox: true,
       timeout: 5000,
     });
@@ -17,7 +22,7 @@ describe("EuPagoWithApiKeyClient", () => {
       const result = await client.payByLink({
         payment: {
           amount: { currency: Currency.EUR, value: 1.0 },
-          lang: "PT",
+          lang: Language.PT,
           expirationDate: new Date("2099-12-31 23:59:59"),
         },
       });
@@ -42,7 +47,7 @@ describe("EuPagoWithApiKeyClient", () => {
       const result = await client.payByLink({
         payment: {
           amount: { currency: Currency.EUR, value: 1.0 },
-          lang: "PT",
+          lang: Language.PT,
           expirationDate: new Date("2000-12-31 23:59:59"),
         },
       });
@@ -57,7 +62,7 @@ describe("EuPagoWithApiKeyClient", () => {
     expect(keys).toContain("message");
   });
 
-    it("passing invalid currency must throw BusinessException", async () => {
+  it("passing invalid currency must throw BusinessException", async () => {
     expect(client).toBeInstanceOf(EuPagoWithApiKeyClient);
 
     let caught: any;
@@ -65,7 +70,7 @@ describe("EuPagoWithApiKeyClient", () => {
       const result = await client.payByLink({
         payment: {
           amount: { currency: "INVALID_CURRENCY" as Currency, value: 1.0 },
-          lang: "PT",
+          lang: Language.PT,
           expirationDate: new Date("2099-12-31 23:59:59"),
         },
       });
@@ -73,7 +78,10 @@ describe("EuPagoWithApiKeyClient", () => {
       caught = err;
     }
     expect(caught).toBeInstanceOf(ValidationException);
-    expect(caught.responseData).toHaveProperty(["payment.amount.currency"], expect.any(Array));
+    expect(caught.responseData).toHaveProperty(
+      ["payment.amount.currency"],
+      expect.any(Array)
+    );
   });
 
   it("passing valid value", async () => {
@@ -85,7 +93,7 @@ describe("EuPagoWithApiKeyClient", () => {
         failUrl: "https://eupago.luisrodrigues.dev/failUrl",
         backUrl: "https://eupago.luisrodrigues.dev/backUrl",
         amount: { currency: Currency.EUR, value: 10 },
-        lang: "PT",
+        lang: Language.ES,
         expirationDate: new Date("2099-12-31 23:59:59"),
       },
     });
