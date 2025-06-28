@@ -1,12 +1,30 @@
 {
   "name": "@luisrodrigues/eupago-client",
-  "version": "0.0.1-dev010",
+  "version": "0.0.1-dev017",
   "files": [
     "dist"
   ],
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./dtos": {
+      "require": "./dist/dtos/index.cjs",
+      "import": "./dist/dtos/index.mjs"
+    },
+    "./exceptions": {
+      "require": "./dist/exceptions/index.cjs",
+      "import": "./dist/exceptions/index.mjs"
+    },
+    "./constants": {
+      "require": "./dist/constants/index.cjs",
+      "import": "./dist/constants/index.mjs"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "npm run build",

@@ -1,8 +1,8 @@
 import { BaseException } from "./base.exceptions";
 
-export class GenericException extends BaseException {
+export class BusinessException extends BaseException {
   constructor(message: string) {
     super(message);
-    this.name = GenericException.name;
+    this.name = BusinessException.name;
   }
 }

@@ -1,17 +1,18 @@
 import {z} from "zod";
 import {format} from "date-fns";
+import { Currency, Language } from "../constants";
 
 export const PayByLinkRequestSchema = z.object({
   payment: z.object({
-    successUrl: z.string().url().optional(),
-    failUrl: z.string().url().optional(),
-    backUrl: z.string().url().optional(),
+    successUrl: z.string().url().optional().describe("URL to redirect after successful payment"),
+    failUrl: z.string().url().optional().describe("URL to redirect after failed payment"),
+    backUrl: z.string().url().optional().describe("The payer will be forwarded to this url if the user presses back."),
     amount: z.object({
-      currency: z.string(),
-      value: z.number(),
+      currency: z.nativeEnum(Currency).describe("Defines the currency of the payment amount. Must be one of the supported currencies."),
+      value: z.number().describe("Payment amount"),
     }),
-    lang: z.string(),
-    expirationDate: z.date()
+    lang:  z.nativeEnum(Language).describe("Defines the Language of the email notifications."),
+    expirationDate: z.date().describe("Defines the date when the link will expire (Default value is 24 hours after the link creation)")
   }),
 });
 

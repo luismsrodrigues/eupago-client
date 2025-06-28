@@ -22,11 +22,11 @@ export abstract class BaseException extends Error {
     }
 
     const formatted = entries
-        .map(
-            ([key, values]) =>
-                `\n  ${key} = [${values.map(v => JSON.stringify(v)).join(', ')}]`
-        )
-        .join('');
+      .map(
+        ([key, values]) =>
+          `\n  ${key} = [${values.map((v) => JSON.stringify(v)).join(", ")}]`
+      )
+      .join("");
 
     return `${base}\nData:${formatted}`;
   }
