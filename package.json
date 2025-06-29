@@ -32,10 +32,17 @@
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "eupago",
+    "api",
+    "client",
+    "typescript",
+    "zod",
+    "payments"
+  ],
+  "author": "luis.ms.rodrigues@hotmail.com",
+  "license": "MIT",
+  "description": "Fully-typed TypeScript client for the EuPago API with automatic request serialization, Zod schema validation, custom exception handling, and built-in unit tests.",
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "dotenv": "^16.6.0",
