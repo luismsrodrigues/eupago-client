@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn build",
     "release": "npm publish",
     "test": "jest",
     "test:watch": "jest --watchAll"
@@ -50,6 +50,15 @@
     "ts-jest": "^29.4.0",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
+  },
+  "homepage": "https://github.com/luismsrodrigues/eupago-client#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luismsrodrigues/eupago-client.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "dependencies": {
