@@ -17,10 +17,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org/'
+          cache: 'yarn'
 
-      - name: 📦 Install dependencies
-        run: yarn cache clean && yarn install --frozen-lockfile
+      - name: 📦 Enable Yarn & install dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
 
       - name: 🧪 Run tests
         env:
@@ -51,6 +53,6 @@ jobs:
       - name: 🚀 Publish to NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          yarn publish --non-interactive --access public
+          yarn npm publish --access public --tolerate-republish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
