@@ -1,4 +1,3 @@
-# .github/workflows/publish.yml
 name: Test and Publish to NPM
 
 on:
@@ -21,7 +20,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
 
       - name: 📦 Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn cache clean && yarn install --frozen-lockfile
 
       - name: 🧪 Run tests
         env:
@@ -50,6 +49,8 @@ jobs:
         run: yarn build
 
       - name: 🚀 Publish to NPM
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          yarn publish --non-interactive --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn publish --non-interactive --access public
