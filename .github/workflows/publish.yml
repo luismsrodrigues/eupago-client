@@ -19,10 +19,13 @@ jobs:
           node-version: '20'
           cache: 'yarn'
 
-      - name: 📦 Enable Yarn & install dependencies
+      - name: ⚙️ Enable Corepack & Yarn 4
         run: |
           corepack enable
-          yarn install --immutable
+          corepack prepare yarn@4.9.2 --activate
+
+      - name: 📦 Install dependencies
+        run: yarn install --immutable
 
       - name: 🧪 Run tests
         env:
