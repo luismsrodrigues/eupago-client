@@ -17,20 +17,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: ⚙️ Enable Corepack and Yarn 4.9.2
-        run: |
-          corepack enable
-          corepack prepare yarn@4.9.2 --activate
-          yarn --version  # 🧪 Verify the correct version
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: 📦 Install dependencies
-        run: yarn install --immutable
+        run: npm ci
 
       - name: 🧪 Run tests
         env:
           API_KEY: ${{ secrets.EUPAGO_API_KEY }}
-        run: yarn test --ci
+        run: npm test -- --ci
 
       - name: 📝 Update package.json version from Git tag
         id: versioning
@@ -51,15 +46,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔨 Build project
-        run: yarn build
-
-      - name: 🔐 Set up auth for npm
-        run: |
-          echo "@luisrodrigues:registry=https://registry.npmjs.org/" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm run build
 
       - name: 🚀 Publish to NPM
-        run: yarn npm publish --access public --tolerate-republish
-
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

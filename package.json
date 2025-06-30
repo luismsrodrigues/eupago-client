@@ -1,6 +1,6 @@
 {
   "name": "@luisrodrigues/eupago-client",
-  "version": "0.1.2-dev022",
+  "version": "0.1.2-dev024",
   "files": [
     "dist"
   ],
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "npm run build",
     "release": "npm publish",
     "test": "jest",
     "test:watch": "jest --watchAll"
@@ -63,6 +63,5 @@
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
     "zod": "^3.25.67"
-  },
-  "packageManager": "yarn@4.9.2"
+  }
 }
