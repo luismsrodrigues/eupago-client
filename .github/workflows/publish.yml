@@ -14,11 +14,18 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
+      - name: 🔑 Configure npm auth
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
+          scope: '@luisrodrigues'
+          always-auth: true
 
       - name: 📦 Install dependencies
         run: yarn install --frozen-lockfile
