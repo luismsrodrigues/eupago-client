@@ -23,10 +23,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           scope: '@luisrodrigues'
           always-auth: true
-        # setup-node will read NODE_AUTH_TOKEN automatically
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: 🔑 Configure npm token
-        run: npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
+      - name: 🔑 Write project .npmrc
+        run: |
+          echo "@luisrodrigues:registry=https://registry.npmjs.org/" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -42,7 +45,6 @@ jobs:
         run: yarn build
 
       - name: 🚀 Publish to NPM
-        # npm publishes scoped packages under the right registry once auth is set
-        run: npm publish --access public
+        run: npm publish --access public --registry=https://registry.npmjs.org/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
