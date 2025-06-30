@@ -53,8 +53,10 @@ jobs:
       - name: 🔨 Build project
         run: yarn build
 
-      - name: 🔐 Create temporary .npmrc for publish
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+      - name: 🔐 Set up auth for npm
+        run: |
+          echo "@luisrodrigues:registry=https://registry.npmjs.org/" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
