@@ -13,12 +13,24 @@ jobs:
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # make sure tags are fetched
 
-      - name: 🟢 Setup Node.js
+      - name: 🟢 Setup Node.js (with scope auth)
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
+          scope: '@luisrodrigues'
+          always-auth: true
+
+      - name: 🔑 Write user‐level .npmrc
+        run: |
+          # ensure Yarn v1 and npm both pick up your token for @luisrodrigues/*
+          echo "@luisrodrigues:registry=https://registry.npmjs.org/" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 📦 Install dependencies
         run: yarn install --frozen-lockfile
@@ -32,7 +44,6 @@ jobs:
         id: versioning
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
-          echo "Detected tag version: $TAG_VERSION"
           jq ".version = \"$TAG_VERSION\"" package.json > tmp.json && mv tmp.json package.json
           echo "new_version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
 
