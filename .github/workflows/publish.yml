@@ -53,14 +53,11 @@ jobs:
       - name: 🔨 Build project
         run: yarn build
 
-      - name: 🔐 Set registry and auth for @luisrodrigues
-        run: |
-          yarn config set npmScopes.luisrodrigues.npmRegistryServer "https://registry.npmjs.org"
+      - name: 🔐 Create temporary .npmrc for publish
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 🚀 Publish to NPM
         run: yarn npm publish --access public --tolerate-republish
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
