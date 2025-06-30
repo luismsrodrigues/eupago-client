@@ -4,7 +4,7 @@ name: Test and Publish to NPM
 on:
   push:
     tags:
-      - 'v*.*.*'    # e.g. v1.2.3
+      - 'v*.*.*'    # e.g. v0.1.2-dev001
 
 jobs:
   release:
@@ -26,12 +26,17 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: 🔑 Write project .npmrc
+      - name: 🔑 Write user‐level .npmrc
         run: |
-          echo "@luisrodrigues:registry=https://registry.npmjs.org/" > .npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "@luisrodrigues:registry=https://registry.npmjs.org/" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: 🔍 Debug npm config
+        run: |
+          npm config list
+          npm whoami
 
       - name: 📦 Install dependencies
         run: yarn install --frozen-lockfile
@@ -41,7 +46,7 @@ jobs:
           API_KEY: ${{ secrets.EUPAGO_API_KEY }}
         run: yarn test --ci
 
-      - name: 🔨 Build
+      - name: 🔨 Build project
         run: yarn build
 
       - name: 🚀 Publish to NPM
