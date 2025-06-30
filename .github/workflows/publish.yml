@@ -53,16 +53,13 @@ jobs:
       - name: 🔨 Build project
         run: yarn build
 
-      - name: 🔐 Set npm auth token for publish
+      - name: 🔐 Set registry + auth for publish
         run: |
           yarn config set npmScopes.luisrodrigues.npmRegistryServer "https://registry.npmjs.org"
-          yarn config set npmScopes.luisrodrigues.npmAuthToken "${NODE_AUTH_TOKEN}"
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: 🚀 Publish to NPM
         run: yarn npm publish --access public --tolerate-republish
         env:
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          YARN_NPM_SCOPE: luisrodrigues
-          YARN_NPM_REGISTRY_SERVER: https://registry.npmjs.org
