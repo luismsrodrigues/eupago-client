@@ -51,6 +51,11 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   },
+  "homepage": "https://github.com/luismsrodrigues/eupago-client#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luismsrodrigues/eupago-client.git"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

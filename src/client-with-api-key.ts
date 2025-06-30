@@ -1,38 +1,80 @@
-import axios, {AxiosError, AxiosInstance, AxiosResponse} from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import {
+  AxiosInterceptorDto,
   EuPagoWithApiKeyClientOptionsDto,
-  EuPagoWithApiKeyClientOptionsSchema, 
-  PayBeLinkErrorResponseSchema, 
-  PayBeLinkResponseDto, 
+  EuPagoWithApiKeyClientOptionsSchema,
+  PayBeLinkErrorResponseSchema,
+  PayBeLinkResponseDto,
   PayBeLinkResponseSchema,
   PayByLinkRequestDto,
   PayByLinkRequestSchema,
-  serializePayByLinkRequest
+  serializePayByLinkRequest,
 } from "./dtos";
-import {EnvironmentUrls} from "./environments.config";
-import {parseZodSchemaOrThrow} from "./utils";
-import {BaseException, BusinessException, GenericException, UnauthorizedException} from "./exceptions";
+import { EnvironmentUrls } from "./environments.config";
+import { parseZodSchemaOrThrow } from "./utils";
+import {
+  BaseException,
+  BusinessException,
+  GenericException,
+  UnauthorizedException,
+} from "./exceptions";
 
 export class EuPagoWithApiKeyClient {
   private readonly _axios: AxiosInstance;
   private readonly _options: EuPagoWithApiKeyClientOptionsDto;
-  private readonly _defaultMessage = 'EuPago Client Unexpected  Error';
+  private readonly _defaultMessage = "EuPago Client Unexpected  Error";
 
   constructor(options: EuPagoWithApiKeyClientOptionsDto) {
-    this._options = parseZodSchemaOrThrow(options, EuPagoWithApiKeyClientOptionsSchema, 'Error when parsing client options');
+    this._options = parseZodSchemaOrThrow(
+      options,
+      EuPagoWithApiKeyClientOptionsSchema,
+      "Error when parsing client options"
+    );
 
     this._axios = axios.create({
-      baseURL: this._options.isSandbox ? EnvironmentUrls.Sandbox : EnvironmentUrls.Production,
+      baseURL: this._options.isSandbox
+        ? EnvironmentUrls.Sandbox
+        : EnvironmentUrls.Production,
       timeout: this._options.timeout,
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `ApiKey ${this._options.apiKey}`,
+        "Content-Type": "application/json",
+        Authorization: `ApiKey ${this._options.apiKey}`,
       },
     });
+
+    if(this._options.interceptors){
+      this.addInterceptor(this._options.interceptors);
+    }
   }
 
-  public async payByLink(payload: PayByLinkRequestDto): Promise<PayBeLinkResponseDto> {
-    const payloadParsed = parseZodSchemaOrThrow(payload, PayByLinkRequestSchema, 'Error when parsing request payload for pay by link');
+  public addInterceptor(interceptors: AxiosInterceptorDto){
+    if (interceptors?.onRequest) {
+      interceptors.onRequest.forEach((interceptor) => {
+        this._axios.interceptors.request.use(
+          (config) => interceptor(config),
+          (error) => Promise.reject(error)
+        );
+      });
+    }
+
+    if (interceptors?.onResponse) {
+      interceptors.onResponse.forEach((interceptor) => {
+        this._axios.interceptors.response.use(
+          (config) => interceptor(config),
+          (error) => Promise.reject(error)
+        );
+      });
+    }
+  }
+
+  public async payByLink(
+    payload: PayByLinkRequestDto
+  ): Promise<PayBeLinkResponseDto> {
+    const payloadParsed = parseZodSchemaOrThrow(
+      payload,
+      PayByLinkRequestSchema,
+      "Error when parsing request payload for pay by link"
+    );
     const request = serializePayByLinkRequest(payloadParsed);
 
     let response: AxiosResponse<PayBeLinkResponseDto>;
@@ -40,30 +82,34 @@ export class EuPagoWithApiKeyClient {
     try {
       response = await this._axios.post<PayBeLinkResponseDto>(
         "v1.02/paybylink/create",
-          request,
+        request
       );
     } catch (e) {
-      throw this.handleAxiosError(e, "EuPago return a error when try create a pay by link");
+      throw this.handleAxiosError(
+        e,
+        "EuPago return a error when try create a pay by link"
+      );
     }
 
-    return parseZodSchemaOrThrow(response.data, PayBeLinkResponseSchema, 'Error when parsing response from EuPago');
+    return parseZodSchemaOrThrow(
+      response.data,
+      PayBeLinkResponseSchema,
+      "Error when parsing response from EuPago"
+    );
   }
 
-  
   private handleAxiosError(err: unknown, message: string): BaseException {
     if (err instanceof AxiosError && err.response) {
       const status = err.response.status;
-      
+
       if (status === 400 || status === 409) {
         const parsed = parseZodSchemaOrThrow(
           err.response.data,
           PayBeLinkErrorResponseSchema,
           "Error when parsing business error response from EuPago"
         );
-        
-        return new BusinessException(
-          message
-        )
+
+        return new BusinessException(message)
           .withData("code", parsed.code)
           .withData("message", parsed.text);
       }

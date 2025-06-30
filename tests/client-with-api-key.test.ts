@@ -101,4 +101,43 @@ describe("EuPagoWithApiKeyClient", () => {
     expect(result).toBeDefined();
     expect(result.redirectUrl).not.toHaveLength(0);
   });
+
+  it("testing the interceptors", async () => {
+    expect(client).toBeInstanceOf(EuPagoWithApiKeyClient);
+
+    let passFroOnRequestInterceptor = false;
+    let passFroOnResponseInterceptor = false;
+
+    client.addInterceptor({
+      onRequest: [
+        (config) => {
+          console.log("REQ", config.method, config.url, config.data);
+          passFroOnRequestInterceptor = true;
+          return config;
+        },
+      ],
+      onResponse: [
+        (res) => {
+          console.log("RES", res.status, res.data);
+          passFroOnResponseInterceptor = true;
+          return res;
+        },
+      ],
+    });
+
+    const result = await client.payByLink({
+      payment: {
+        successUrl: "https://eupago.luisrodrigues.dev/success",
+        failUrl: "https://eupago.luisrodrigues.dev/failUrl",
+        backUrl: "https://eupago.luisrodrigues.dev/backUrl",
+        amount: { currency: Currency.EUR, value: 10 },
+        lang: Language.ES,
+        expirationDate: new Date("2099-12-31 23:59:59"),
+      },
+    });
+
+    expect(result).toBeDefined();
+    expect(passFroOnRequestInterceptor).toBe(true);
+    expect(passFroOnResponseInterceptor).toBe(true);
+  });
 });

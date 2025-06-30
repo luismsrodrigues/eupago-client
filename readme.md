@@ -150,6 +150,78 @@ Thrown on network or API-level errors when calling `payByLink`. Contains `code` 
 
 Everything in this SDK maps directly to the EuPago API [API Reference](https://eupago.readme.io/reference/api-eupago). See their docs for full details on request parameters and response fields.
 
+## Axios Interceptors
+
+Customize HTTP logging, metrics, or error handling by registering Axios interceptors. You can provide interceptors either when you construct the client or later via the `addInterceptor` method.
+
+Interceptors follow this shape:
+
+```ts
+interface AxiosInterceptorDto {
+  onRequest?: Array<
+    (config: InternalAxiosRequestConfig) =>
+      InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>
+  >;
+  onResponse?: Array<
+    (response: AxiosResponse) =>
+      AxiosResponse | Promise<AxiosResponse>
+  >;
+}
+```
+
+### 1. Via Constructor
+
+Pass your interceptors in the client options:
+
+```ts
+const client = new EuPagoWithApiKeyClient({
+  apiKey: process.env.EUPAGO_API_KEY!,
+  timeout: 5000,
+  isSandbox: true,
+  interceptors: {
+    onRequest: [
+      (config) => {
+        console.log("REQ", config.method, config.url, config.data);
+        return config;
+      },
+    ],
+    onResponse: [
+      (res) => {
+        console.log("RES", res.status, res.data);
+        return res;
+      },
+    ],
+  },
+});
+```
+
+### 2. Via `addInterceptor` Method
+
+Attach interceptors dynamically after instantiation:
+
+```ts
+const client = new EuPagoWithApiKeyClient({
+  apiKey: process.env.EUPAGO_API_KEY!,
+  isSandbox: false,
+});
+
+// later…
+client.addInterceptor({
+  onRequest: [
+    (config) => {
+      console.log("REQ", config.method, config.url, config.data);
+      return config;
+    },
+  ],
+  onResponse: [
+    (res) => {
+      console.log("RES", res.status, res.data);
+      return res;
+    },
+  ],
+});
+```
+
 ## EuPago API Integration Matrix
 
 This matrix details each EuPago API endpoint, its documentation link, and whether it’s been integrated into the client.  
