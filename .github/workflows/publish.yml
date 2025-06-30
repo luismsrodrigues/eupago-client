@@ -62,3 +62,7 @@ jobs:
 
       - name: 🚀 Publish to NPM
         run: yarn npm publish --access public --tolerate-republish
+        env:
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_SCOPE: luisrodrigues
+          YARN_NPM_REGISTRY_SERVER: https://registry.npmjs.org
