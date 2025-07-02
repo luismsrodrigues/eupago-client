@@ -65,7 +65,7 @@ export abstract class BaseClient<T> {
 
     this._axios.interceptors.response.use(
       undefined,
-      (error) => parsedInterceptor(error)
+      (error) => parsedInterceptor(error.response)
     );
 
     return this;
