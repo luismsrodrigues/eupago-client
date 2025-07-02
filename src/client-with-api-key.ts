@@ -33,7 +33,6 @@ export class EuPagoWithApiKeyClient extends BaseClient<EuPagoWithApiKeyClientOpt
     this.addOnResponseErrorInterceptor((response?: AxiosResponse) => {
       if (response) {
         const status = response.status;
-
         if (
           status === HttpStatusCode.BadRequest ||
           status === HttpStatusCode.Conflict

@@ -1,4 +1,4 @@
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 import {
   AxiosInterceptorOnRequestDto,
   AxiosInterceptorOnRequestSchema,
@@ -65,7 +65,7 @@ export abstract class BaseClient<T> {
 
     this._axios.interceptors.response.use(
       undefined,
-      (error: AxiosError) => parsedInterceptor(error.response)
+      (error) => parsedInterceptor(error)
     );
 
     return this;

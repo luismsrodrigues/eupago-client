@@ -152,9 +152,9 @@ Everything in this SDK maps directly to the EuPago API [API Reference](https://e
 
 ## Axios Interceptors
 
-Customize HTTP logging, metrics, or error handling by registering Axios interceptors. You can provide interceptors either when you construct the client or later via the `addInterceptor` method.
+Customize HTTP logging, metrics, or error handling by registering Axios interceptors. You can provide interceptors either via the constructor or dynamically using `addInterceptor` or the individual `addOn*Interceptor` methods.
 
-Interceptors follow this shape:
+### ✅ Interceptor Types
 
 ```ts
 interface AxiosInterceptorDto {
@@ -166,38 +166,17 @@ interface AxiosInterceptorDto {
     (response: AxiosResponse) =>
       AxiosResponse | Promise<AxiosResponse>
   >;
+  onResponseError?: Array<
+    (error: AxiosResponse) =>
+      unknown | Promise<unknown>
+  >;
 }
 ```
 
-### 1. Via Constructor
 
-Pass your interceptors in the client options:
+### Register via \`addInterceptor\` Method
 
-```ts
-const client = new EuPagoWithApiKeyClient({
-  apiKey: process.env.EUPAGO_API_KEY!,
-  timeout: 5000,
-  isSandbox: true,
-  interceptors: {
-    onRequest: [
-      (config) => {
-        console.log("REQ", config.method, config.url, config.data);
-        return config;
-      },
-    ],
-    onResponse: [
-      (res) => {
-        console.log("RES", res.status, res.data);
-        return res;
-      },
-    ],
-  },
-});
-```
-
-### 2. Via `addInterceptor` Method
-
-Attach interceptors dynamically after instantiation:
+Add interceptors after instantiation using \`addInterceptor\`:
 
 ```ts
 const client = new EuPagoWithApiKeyClient({
@@ -205,7 +184,6 @@ const client = new EuPagoWithApiKeyClient({
   isSandbox: false,
 });
 
-// later…
 client.addInterceptor({
   onRequest: [
     (config) => {
@@ -219,8 +197,38 @@ client.addInterceptor({
       return res;
     },
   ],
+  onResponseError: [
+    (error) => {
+      console.error("RESPONSE ERROR", error.status, error.data);
+      return Promise.reject(error);
+    },
+  ],
 });
 ```
+
+---
+
+### Register via Individual Methods
+
+You can also register interceptors individually with a fluent API:
+
+```ts
+client
+  .addOnRequestInterceptor((config) => {
+    console.log("REQ", config.method, config.url, config.data);
+    return config;
+  })
+  .addOnResponseInterceptor((res) => {
+    console.log("RES", res.status, res.data);
+    return res;
+  })
+  .addOnResponseErrorInterceptor((error) => {
+    console.error("RESPONSE ERROR", error.status, error.data);
+    return Promise.reject(error);
+  });
+```
+
+Each \`addOn*Interceptor\` method accepts a single function and returns the client instance to allow chaining.
 
 ## EuPago API Integration Matrix
 
