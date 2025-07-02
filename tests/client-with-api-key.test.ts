@@ -108,22 +108,18 @@ describe("EuPagoWithApiKeyClient", () => {
     let passFroOnRequestInterceptor = false;
     let passFroOnResponseInterceptor = false;
 
-    client.addInterceptor({
-      onRequest: [
-        (config) => {
-          console.log("REQ", config.method, config.url, config.data);
-          passFroOnRequestInterceptor = true;
-          return config;
-        },
-      ],
-      onResponse: [
-        (res) => {
-          console.log("RES", res.status, res.data);
-          passFroOnResponseInterceptor = true;
-          return res;
-        },
-      ],
-    });
+    client
+      .addOnRequestInterceptor((config) => {
+        console.log("REQ", config.method, config.url, config.data);
+        passFroOnRequestInterceptor = true;
+        return config;
+      })
+      .addOnResponseInterceptor((res) => {
+        console.log("RES", res.status, res.data);
+        res.headers;
+        passFroOnResponseInterceptor = true;
+        return res;
+      });
 
     const result = await client.payByLink({
       payment: {
