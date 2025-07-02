@@ -10,19 +10,23 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     },
     "./dtos": {
       "require": "./dist/dtos/index.cjs",
-      "import": "./dist/dtos/index.mjs"
+      "import": "./dist/dtos/index.mjs",
+      "types": "./dist/dtos/index.d.ts"
     },
     "./exceptions": {
       "require": "./dist/exceptions/index.cjs",
-      "import": "./dist/exceptions/index.mjs"
+      "import": "./dist/exceptions/index.mjs",
+      "types": "./dist/exceptions/index.d.ts"
     },
     "./constants": {
       "require": "./dist/constants/index.cjs",
-      "import": "./dist/constants/index.mjs"
+      "import": "./dist/constants/index.mjs",
+      "types": "./dist/constants/index.d.ts"
     }
   },
   "scripts": {
