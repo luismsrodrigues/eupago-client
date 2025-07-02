@@ -1,6 +1,6 @@
 {
   "name": "@luisrodrigues/eupago-client",
-  "version": "0.2.1-dev001",
+  "version": "0.2.1",
   "files": [
     "dist"
   ],
