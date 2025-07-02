@@ -154,60 +154,6 @@ Everything in this SDK maps directly to the EuPago API [API Reference](https://e
 
 Customize HTTP logging, metrics, or error handling by registering Axios interceptors. You can provide interceptors either via the constructor or dynamically using `addInterceptor` or the individual `addOn*Interceptor` methods.
 
-### ✅ Interceptor Types
-
-```ts
-interface AxiosInterceptorDto {
-  onRequest?: Array<
-    (config: InternalAxiosRequestConfig) =>
-      InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>
-  >;
-  onResponse?: Array<
-    (response: AxiosResponse) =>
-      AxiosResponse | Promise<AxiosResponse>
-  >;
-  onResponseError?: Array<
-    (error: AxiosResponse) =>
-      unknown | Promise<unknown>
-  >;
-}
-```
-
-
-### Register via \`addInterceptor\` Method
-
-Add interceptors after instantiation using \`addInterceptor\`:
-
-```ts
-const client = new EuPagoWithApiKeyClient({
-  apiKey: process.env.EUPAGO_API_KEY!,
-  isSandbox: false,
-});
-
-client.addInterceptor({
-  onRequest: [
-    (config) => {
-      console.log("REQ", config.method, config.url, config.data);
-      return config;
-    },
-  ],
-  onResponse: [
-    (res) => {
-      console.log("RES", res.status, res.data);
-      return res;
-    },
-  ],
-  onResponseError: [
-    (error) => {
-      console.error("RESPONSE ERROR", error.status, error.data);
-      return Promise.reject(error);
-    },
-  ],
-});
-```
-
----
-
 ### Register via Individual Methods
 
 You can also register interceptors individually with a fluent API:
