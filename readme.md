@@ -150,6 +150,32 @@ Thrown on network or API-level errors when calling `payByLink`. Contains `code` 
 
 Everything in this SDK maps directly to the EuPago API [API Reference](https://eupago.readme.io/reference/api-eupago). See their docs for full details on request parameters and response fields.
 
+## Axios Interceptors
+
+Customize HTTP logging, metrics, or error handling by registering Axios interceptors. You can provide interceptors either via the constructor or dynamically using `addInterceptor` or the individual `addOn*Interceptor` methods.
+
+### Register via Individual Methods
+
+You can also register interceptors individually with a fluent API:
+
+```ts
+client
+  .addOnRequestInterceptor((config) => {
+    console.log("REQ", config.method, config.url, config.data);
+    return config;
+  })
+  .addOnResponseInterceptor((res) => {
+    console.log("RES", res.status, res.data);
+    return res;
+  })
+  .addOnResponseErrorInterceptor((error) => {
+    console.error("RESPONSE ERROR", error.status, error.data);
+    return Promise.reject(error);
+  });
+```
+
+Each \`addOn*Interceptor\` method accepts a single function and returns the client instance to allow chaining.
+
 ## EuPago API Integration Matrix
 
 This matrix details each EuPago API endpoint, its documentation link, and whether it’s been integrated into the client.  
