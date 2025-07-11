@@ -102,6 +102,34 @@ describe("EuPagoWithApiKeyClient", () => {
     expect(result.redirectUrl).not.toHaveLength(0);
   });
 
+  it("passing valid value with customer object and product", async () => {
+    expect(client).toBeInstanceOf(EuPagoWithApiKeyClient);
+
+    const result = await client.payByLink({
+      payment: {
+        successUrl: "https://eupago.luisrodrigues.dev/success",
+        failUrl: "https://eupago.luisrodrigues.dev/failUrl",
+        backUrl: "https://eupago.luisrodrigues.dev/backUrl",
+        amount: { currency: Currency.EUR, value: 10 },
+        lang: Language.ES,
+        expirationDate: new Date("2099-12-31 23:59:59"),
+      },
+      products: [{
+        name: 'PRODUCT 123',
+        value: 10,
+        quantity: 1,
+        description: 'THIS IS A DESCRIPTIONS'
+      }],
+      customer: {
+        email: 'test@test.com',
+        name: 'Customer Name',
+      }
+    });
+
+    expect(result).toBeDefined();
+    expect(result.redirectUrl).not.toHaveLength(0);
+  });
+
   it("testing the interceptors", async () => {
     expect(client).toBeInstanceOf(EuPagoWithApiKeyClient);
 

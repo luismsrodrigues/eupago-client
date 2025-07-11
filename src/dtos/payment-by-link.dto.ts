@@ -14,11 +14,27 @@ export const PayByLinkRequestSchema = z.object({
     lang:  z.nativeEnum(Language).describe("Defines the Language of the email notifications."),
     expirationDate: z.date().describe("Defines the date when the link will expire (Default value is 24 hours after the link creation)")
   }),
+  products: z.array(z.object({
+    sku: z.string().optional().describe("Required to pay with Cofidis Pay"),
+    name: z.string().nonempty(),
+    value: z.number(),
+    quantity: z.number(),
+    tax: z.number().optional(),
+    description: z.string().optional(),
+  })).optional(),
+  customer: z.object({
+    notify: z.boolean().default(false).optional(),
+    email: z.string().optional().describe("Email address"),
+    name: z.string().nonempty(),
+  }).optional(),
 });
+
+
 
 export type PayByLinkRequestDto = z.infer<typeof PayByLinkRequestSchema>;
 
 export const serializePayByLinkRequest = (data: PayByLinkRequestDto) => ({
+  ...data,
   payment: {
     ...data.payment,
     expirationDate: format(data.payment.expirationDate, "yyyy-MM-dd HH:mm:ss"),
