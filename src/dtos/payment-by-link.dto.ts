@@ -4,6 +4,7 @@ import { Currency, Language } from "../constants";
 
 export const PayByLinkRequestSchema = z.object({
   payment: z.object({
+    identifier: z.string().optional(),
     successUrl: z.string().url().optional().describe("URL to redirect after successful payment"),
     failUrl: z.string().url().optional().describe("URL to redirect after failed payment"),
     backUrl: z.string().url().optional().describe("The payer will be forwarded to this url if the user presses back."),

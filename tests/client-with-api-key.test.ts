@@ -2,10 +2,10 @@ import { EuPagoWithApiKeyClient } from "../src";
 import { Currency, Language } from "../src/constants";
 import {
   BusinessException,
-  GenericException,
   UnauthorizedException,
   ValidationException,
 } from "../src/exceptions";
+import { v4 as uuidv4 } from 'uuid';
 
 describe("EuPagoWithApiKeyClient", () => {
   it("invalid api key must throw a UnauthorizedException", async () => {
@@ -107,6 +107,7 @@ describe("EuPagoWithApiKeyClient", () => {
 
     const result = await client.payByLink({
       payment: {
+        identifier: uuidv4(),
         successUrl: "https://eupago.luisrodrigues.dev/success",
         failUrl: "https://eupago.luisrodrigues.dev/failUrl",
         backUrl: "https://eupago.luisrodrigues.dev/backUrl",
