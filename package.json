@@ -9,24 +9,24 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs"
     },
     "./dtos": {
+      "types": "./dist/dtos/index.d.ts",
       "require": "./dist/dtos/index.cjs",
-      "import": "./dist/dtos/index.mjs",
-      "types": "./dist/dtos/index.d.ts"
+      "import": "./dist/dtos/index.mjs"
     },
     "./exceptions": {
+      "types": "./dist/exceptions/index.d.ts",
       "require": "./dist/exceptions/index.cjs",
-      "import": "./dist/exceptions/index.mjs",
-      "types": "./dist/exceptions/index.d.ts"
+      "import": "./dist/exceptions/index.mjs"
     },
     "./constants": {
+      "types": "./dist/constants/index.d.ts",
       "require": "./dist/constants/index.cjs",
-      "import": "./dist/constants/index.mjs",
-      "types": "./dist/constants/index.d.ts"
+      "import": "./dist/constants/index.mjs"
     }
   },
   "scripts": {
@@ -65,9 +65,8 @@
     "access": "public"
   },
   "dependencies": {
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "date-fns": "^4.1.0",
     "zod": "^3.25.67"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }
